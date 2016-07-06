@@ -18,15 +18,17 @@ class RNNLM(Chain):
         super(RNNLM, self).__init__(
             embed = L.EmbedID(vocab_size, embed_size),
             l1 = L.LSTM(embed_size, embed_size),
-            l2 = L.Linear(embed_size, vocab_size))
+            l2 = L.LSTM(embed_size, embed_size),
+            l3 = L.Linear(embed_size, vocab_size))
 
         self.vocab_size = vocab_size
         self.embed_size = embed_size
 
-    def __call__(self, x):
+    def __call__(self, x, train=True):
         h = self.embed(x)
-        h = self.l1(h)
-        y = self.l2(h)
+        h = self.l1(F.dropout(h, train))
+        h = self.l2(F.dropout(h, train))
+        y = self.l3(F.dropout(h, train))
         return y
 
     def reset_state(self):
