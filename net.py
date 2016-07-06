@@ -9,7 +9,7 @@ import chainer.functions as F
 import chainer.links as L
 import numpy as np
 
-class CBOW(Chain):
+class　RNNLM(Chain):
 
     def __init__(self,
                  vocab_size,
@@ -17,18 +17,20 @@ class CBOW(Chain):
 
         super(CBOW, self).__init__(
             embed = L.EmbedID(vocab_size, embed_size),
-            l1 = L.Linear(embed_size, vocab_size))
+            l1 = L.LSTM(embed_size, embed_size)
+            l2 = L.Linear(embed_size, vocab_size))
 
         self.vocab_size = vocab_size
         self.embed_size = embed_size
 
-    def __call__(self, context):
-        h = None
-        for x in context:
-            e = self.embed(x)
-            h = h + e if h is not None else e
-        y = self.l1(h)
+    def __call__(self, x):
+        h = self.embed(x)
+        h = self.l1(h)
+        y = self.l2(h)
         return y
+
+    def reset_state(self):
+        self.l1.reset_state()
 
     def get_embedding(self, x):
         return self.embed(x)
@@ -45,4 +47,4 @@ class CBOW(Chain):
             # specファイルからモデルのパラメータをロード
             vocab_size = int(next(fp))
             embed_size = int(next(fp))
-            return CBOW(vocab_size, embed_size)
+            return RNNLM(vocab_size, embed_size)
