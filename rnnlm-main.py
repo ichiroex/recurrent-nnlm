@@ -221,7 +221,7 @@ def train(args):
         print
 
     # モデルの定義
-    model = CBOW(vocab_size, embed_size)
+    model = RNNLM(vocab_size, embed_size)
 
     # GPUを使うかどうか
     if args.use_gpu:
@@ -256,7 +256,6 @@ def train(args):
             # 各バッチ内のサイズを統一させる
             src_batch = util.fill_batch(src_batch, src_vocab2id['</s>'])
 
-            model.zerograds() # 重みを初期化
 
             # 損失を計算
             hyp_batch, loss = forward_one_step(model,
@@ -267,6 +266,7 @@ def train(args):
             cur_log_perp += loss.data
             sum_train_loss  += float(cuda.to_cpu(loss.data)) * len(src_batch)   # 平均誤差計算用
 
+            model.zerograds() # 重みを初期化
             loss.backward() # Backpropagation
             optimizer.update() # 重みを更新
 
