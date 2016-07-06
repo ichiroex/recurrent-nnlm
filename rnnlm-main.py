@@ -140,7 +140,6 @@ def forward_one_step(model,
 
     hyp_batch = [[] for _ in range(batch_size)]
 
-
     # Train
     if is_train:
 
@@ -151,24 +150,17 @@ def forward_one_step(model,
 
         src_batch = xp.asarray(src_batch, dtype=xp.int32).T # 転置
         N = 2
-        for i, t_batch in enumerate(src_batch[N:len(src_batch)-N]):
-            index = i + N
+        for x_batch, t_batch in zip(src_batch, src_batch[1:]):
+            x = Variable(x_batch) # source
             t = Variable(t_batch) #target
 
-            context = []
-            for offset in range(i, index+N+1):
-                if offset == index:
-                    continue
-                context.append(Variable(src_batch[offset]))
-
-            y = model(context)
+            y = model(x)
 
             loss += F.softmax_cross_entropy(y, t)
             output = cuda.to_cpu(y.data.argmax(1))
 
             for k in range(batch_size):
                 hyp_batch[k].append(output[k])
-
 
         return hyp_batch, loss # 予測結果と損失を返す
 
@@ -258,7 +250,7 @@ def train(args):
 
             model.zerograds() # 重みを初期化
             model.reset_state()
-            
+
             # 損失を計算
             hyp_batch, loss = forward_one_step(model,
                                                src_batch,
