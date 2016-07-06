@@ -45,7 +45,7 @@ def argument_parser():
 
     # Model parameter
     def_vocab = 5000
-    def_embed = 100
+    def_embed = 300
     def_hidden = 100
 
     # Other parameter
@@ -145,7 +145,7 @@ def forward_one_step(model,
 
         loss = Variable(xp.asarray(xp.zeros(()), dtype=xp.float32))
 
-        src_batch =  [ [src_vocab2id["<s>"]] + src for src in src_batch]
+        #src_batch =  [ [src_vocab2id["<s>"]] + src for src in src_batch]
 
 
         src_batch = xp.asarray(src_batch, dtype=xp.int32).T # 転置
@@ -268,8 +268,8 @@ def train(args):
             if args.is_debug_mode:
                 for k, hyp in enumerate(hyp_batch):
                     print 'epoch: ', epoch, ', sample:', batchsize * j + k
-                    _src = [src_id2vocab[x] if src_id2vocab[x] != "</s>" else "" for x in src_batch[k]]
-                    _hyp = [src_id2vocab[x] if src_id2vocab[x] != "</s>" else "" for x in hyp]
+                    _src = [src_id2vocab[x] if src_id2vocab[x] != "</s>" else break for x in src_batch[k]]
+                    _hyp = [src_id2vocab[x] if src_id2vocab[x] != "</s>" else break for x in hyp]
                     print 'src:', ' '.join( _src )
                     print 'hyp:', ' '.join( _hyp )
                     print '=============================================='
