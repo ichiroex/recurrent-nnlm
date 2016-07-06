@@ -268,8 +268,8 @@ def train(args):
             if args.is_debug_mode:
                 for k, hyp in enumerate(hyp_batch):
                     print 'epoch: ', epoch, ', sample:', batchsize * j + k
-                    _src = [src_id2vocab[x] if src_id2vocab[x] != "</s>" else break for x in src_batch[k]]
-                    _hyp = [src_id2vocab[x] if src_id2vocab[x] != "</s>" else break for x in hyp]
+                    _src = [src_id2vocab[x] if src_id2vocab[x] != "</s>" else "" for x in src_batch[k]]
+                    _hyp = [src_id2vocab[x] if src_id2vocab[x] != "</s>" else "" for x in hyp]
                     print 'src:', ' '.join( _src )
                     print 'hyp:', ' '.join( _hyp )
                     print '=============================================='
