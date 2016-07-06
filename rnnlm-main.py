@@ -41,7 +41,7 @@ def argument_parser():
     def_is_debug_mode = False
     def_src = ""
     def_context_window = 4
-    def_model = "cbow"
+    def_model = "rnnlm"
 
     # Model parameter
     def_vocab = 5000
@@ -218,7 +218,7 @@ def train(args):
     # GPUを使うかどうか
     if args.use_gpu:
         cuda.check_cuda_available()
-        cuda.get_device(1).use()
+        cuda.get_device(0).use()
         model.to_gpu()
     xp = cuda.cupy if args.use_gpu else np #args.gpu <= 0: use cpu, otherwise: use gpu
 
