@@ -1,8 +1,5 @@
 # coding: utf-8
 import numpy as np
-import codecs
-from sklearn.cross_validation import train_test_split
-from collections import defaultdict
 import six
 import sys
 import chainer
@@ -10,14 +7,11 @@ import chainer.links as L
 from chainer import optimizers, cuda, serializers, Variable
 import chainer.functions as F
 import argparse
-from gensim import corpora, matutils
-from gensim.models import word2vec
-import time
 import math
-from net import CBOW
-import util
-import nltk.translate.bleu_score
 import scipy.spatial.distance
+
+from net import RNNLM
+import util
 
 """
     Code for Continuous Bag-Of-Words
