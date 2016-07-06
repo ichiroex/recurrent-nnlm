@@ -9,15 +9,15 @@ import chainer.functions as F
 import chainer.links as L
 import numpy as np
 
-class　RNNLM(Chain):
+class RNNLM(Chain):
 
     def __init__(self,
                  vocab_size,
                  embed_size):
 
-        super(CBOW, self).__init__(
+        super(RNNLM, self).__init__(
             embed = L.EmbedID(vocab_size, embed_size),
-            l1 = L.LSTM(embed_size, embed_size)
+            l1 = L.LSTM(embed_size, embed_size),
             l2 = L.Linear(embed_size, vocab_size))
 
         self.vocab_size = vocab_size
