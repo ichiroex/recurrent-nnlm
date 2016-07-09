@@ -285,7 +285,7 @@ def test(args):
     src_vocab2id, src_id2vocab, vocab_size = util.load_vocab(args.model + ".srcvocab")
 
     # モデルの読込
-    model = CBOW.load_spec(args.model + ".spec")
+    model = RNNLM.load_spec(args.model + ".spec")
 
     # GPUを使うかどうか
     if args.gpu_id != -1:
