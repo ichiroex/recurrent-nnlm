@@ -26,13 +26,14 @@ class RNNLM(Chain):
 
     def __call__(self, x, train=True):
         h = self.embed(x)
-        h = self.l1(F.dropout(h, train))
-        h = self.l2(F.dropout(h, train))
-        y = self.l3(F.dropout(h, train))
+        h = self.l1(F.dropout(h,train=train))
+        h = self.l2(F.dropout(h,train=train))
+        y = self.l3(F.dropout(h,train=train))
         return y
 
     def reset_state(self):
         self.l1.reset_state()
+        self.l2.reset_state()
 
     def get_embedding(self, x):
         return self.embed(x)
