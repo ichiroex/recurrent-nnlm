@@ -46,7 +46,6 @@ def argument_parser():
     # Model parameter
     def_vocab = 5000
     def_embed = 300
-    def_hidden = 100
 
     # Other parameter
     def_epoch = 10
@@ -97,11 +96,6 @@ def argument_parser():
                         type=int,
                         default=def_embed,
                         help='embedding layer size')
-    parser.add_argument('--hidden',
-                        dest='hidden',
-                        type=int,
-                        default=def_hidden,
-                        help='hidden layer size')
 
     parser.add_argument('--epoch',
                         dest='epoch',
@@ -113,11 +107,6 @@ def argument_parser():
                         type=int,
                         default=def_batchsize,
                         help='learning minibatch size')
-    parser.add_argument('--gclip',
-                        dest='grad_clip'  ,
-                        type=int,
-                        default=def_grad_clip,
-                        help='threshold of gradiation clipping')
 
     parser.add_argument('--word',
                         dest='src_word'  ,
@@ -225,10 +214,8 @@ def train(args):
 
     N = sample_size
     # Setup optimizer
-    optimizer = optimizers.AdaGrad(lr=0.001)
+    optimizer = optimizers.Adam()
     optimizer.setup(model)
-    optimizer.add_hook(chainer.optimizer.GradientClipping(grad_clip))
-
 
     # 学習の始まり
     for epoch in range(n_epoch):
@@ -283,12 +270,14 @@ def train(args):
         print('train mean loss={}'.format(sum_train_loss / N)) #平均誤差
         print('training perplexity={}'.format(math.exp(float(cur_log_perp) / N))) #perplexity
 
-        #モデルの途中経過を保存
-        print 'saving model....'
-        prefix = './model/' + args.model + '.%03.d' % (epoch + 1)
-        util.save_vocab(prefix + '.srcvocab', src_id2vocab)
-        model.save_spec(prefix + '.spec')
-        serializers.save_hdf5(prefix + '.weights', model)
+        #epoch 10毎にモデルを保存
+        if (epoch+1) % 10 == 0:
+            #モデルの途中経過を保存
+            print 'saving model....'
+            prefix = './model/' + args.model + '.%03.d' % (epoch + 1)
+            util.save_vocab(prefix + '.srcvocab', src_id2vocab)
+            model.save_spec(prefix + '.spec')
+            serializers.save_hdf5(prefix + '.weights', model)
 
         sys.stdout.flush()
 
